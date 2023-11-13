@@ -33,6 +33,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.img="";
     console.log("El evento Adquisicion de imagen");
     this.img += event.samples[0];
+  
     this.repairBase64();
   }
   ngOnInit(): void {
@@ -93,6 +94,7 @@ export class AppComponent implements OnInit, OnDestroy {
     strImage = strImage.replace(/_/g,"/");
     strImage = strImage.replace(/-/g,"+");
     this.img = strImage;
+    console.log(this.img);
   }
 
   guardarHuella(){
