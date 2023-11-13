@@ -16,14 +16,20 @@
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "importHelpers": true,
-    "target": "ES2022",
-    "module": "ES2022",
+    "target": "ES2017",
+    "module": "ES6",
     "useDefineForClassFields": false,
     "lib": [
-      "ES2022",
+      "ES2018",
       "dom"
-    ]
+    ],
+    "typeRoots": ["./src/app/core/modules/WebSdk", 
+     "node_modules/@types",
+    "./@types",],
+    "types": ["./src/app/core/modules/WebSdk"],
+    "allowJs": true
   },
+  "include": ["./src/app/core/modules/WebSdk"],
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
