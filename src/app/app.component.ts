@@ -12,6 +12,7 @@ export class AppComponent implements OnInit, OnDestroy {
   title = 'huellaYT';
   listaFinger:any;
   img:string = "";
+  huellasRegister: any[]=[];
 
   private reader: FingerprintReader;
   constructor(private services: ServicesService){
@@ -30,11 +31,17 @@ export class AppComponent implements OnInit, OnDestroy {
   }
  
   private onSamplesAcquired = (event: SamplesAcquired) => {
-    this.img="";
-    console.log("El evento Adquisicion de imagen");
-    this.img += event.samples[0];
-  
-    this.repairBase64();
+    if (this.huellasRegister.length == 4) {
+      console.log("completo");
+      
+    } else{
+      this.img="";
+      console.log("El evento Adquisicion de imagen");
+      this.img += event.samples[0];  
+      this.repairBase64();
+    }
+   
+
   }
   ngOnInit(): void {
     this.reader = new FingerprintReader();
@@ -94,12 +101,15 @@ export class AppComponent implements OnInit, OnDestroy {
     strImage = strImage.replace(/_/g,"/");
     strImage = strImage.replace(/-/g,"+");
     this.img = strImage;
-    console.log(this.img);
+    this.huellasRegister.push(this.img)
+    this.services.busquedaPorHuella(this.img).subscribe(resp => {
+      console.log(resp);
+    })
   }
 
   guardarHuella(){
-    this.services.guardar(this.img).subscribe(resp => {
-      console.log(resp);
+    console.log(this.huellasRegister);
+    this.services.guardar(this.huellasRegister).subscribe(resp => {
     })
   }
 }
