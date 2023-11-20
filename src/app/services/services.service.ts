@@ -10,7 +10,7 @@ export class ServicesService {
   private url = 'http://ec2-54-146-2-42.compute-1.amazonaws.com:8080/api/';
 
   guardar(img: any[]){
-    const endpoint = 'v1/administrativo/paciente/registrar-huella-paciente';
+    const endpoint = 'v1/administrativo/paciente/registrar-huella-paciente-admin';
     let datos = {
       idPaciente: 325,
       huellasBase64: img
@@ -20,22 +20,20 @@ export class ServicesService {
 
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
-      'X-Auth-Token': 'eyJhbGciOiJFQ0RILUVTK0ExMjhLVyIsImVuYyI6IkExMjhDQkMtSFMyNTYiLCJraWQiOiJsbGF2ZV9yZWNpYmUiLCJjdHkiOiJKV1QiLCJlcGsiOnsia3R5IjoiRUMiLCJ4IjoiLXhmQkg0OXFrcnJ1Q3lPckNVT3NSanE4WWppSV9jeXpmaWpfVGhWb2tJSSIsInkiOiJwSDNvdXBHakhHQ1VXbFRzVVp5YnYzcjc1TEN4dUhKbHNpNEJpa1JFWDQ0IiwiY3J2IjoiUC0yNTYifX0.CeIMwHSRmcZJxzvoG03-HEFIQ-AZ37ymhaPZNeStldotU7hVNuvSZQ.rGAqe4Pi5219P7yAJWJWBA.Ynv3XdT6F6bY0xEXVqqUxXUawz6iyVZxwYpuQFNcC75fvAa8aUv69Nd7F_8kopiCSxlG_zOoh8A9CmFNbxgVSzez2gC3TKKHB2kniIfWGV6stXbOKsvT3STTxGnxWGRaonr1T87JJXA3f-6phPeD_rK4ZC0ldApdUraNZG_6k_9cWdaCiKkr2wFwEChVLpEPs-6YsIvdd6gjH4hTma7x1kh1P3neYjzI5SzZcKH7HVwk2604OT45Yhpxw-SAzJzwERpFs3UnBg6Ab_If12M9JjpYF-0pYWktwSHOLprBS9ahfsi4o9kxPX4lid_fpZV4kE49Rb8bS5I0zQD_Dsu1vyBNel2vJeis-tFIf07NR2SeaAeWq4BqyBHg9LbiO4gNxbBUWWt9qyK-PpkAu22s3A.S9Vc52-3-6pgUWdAbNQGcA', // Ajusta según el nombre de tu encabezado
+      'X-Auth-Token': 'eyJhbGciOiJFQ0RILUVTK0ExMjhLVyIsImVuYyI6IkExMjhDQkMtSFMyNTYiLCJraWQiOiJsbGF2ZV9yZWNpYmUiLCJjdHkiOiJKV1QiLCJlcGsiOnsia3R5IjoiRUMiLCJ4IjoialU1ZWY4d0c4S3d2MHZqMzFjeUNmUGRmUWlJRFc0aHR4c2pWTVl2UndybyIsInkiOiJLZFJVTHdrQzZFR2l5LUFzS0VHOWNVQklDOTQ4RTRzZDdkTC1EdklIU0cwIiwiY3J2IjoiUC0yNTYifX0.7xn-mjdedzjKsqWbxy4T2Ot84GHVQstLYEhTn4tBQtcDRw36-DyL6Q.PyKa_jxkcWFv0NtoypCqJw.6GCB-Um0B5d4CWMfcOrWy2GPB1__SEsq0LpBb7RwDvbAeXzxmmND3nMTMfuq90tD7O28Y6ntT7E2OO08mEYyIpL8ytbLTIPZKs9ELZlKc-k9qoo4Ew0R_4wHJ3SGp9DxLeiSxADnQ0FF3StCB3WW-f5d2bA2dH9UZFkug8FvptTOmyFeU4XvRO0y0ht84QUpDHqZ-VJMYS1RLo969eXEig8r7oA2GKWARNhhHwX5MWHWRpsW4KHxtK1hM8AL7ZF4ufynv505y3jXfYjIWvUiqCPheB1z4GzZPFjoN6jyQBkRg6ENaHmKh5kTnSlAm5Lp7TTDkZ6vu4AiAN1epq3ZZcJABap3OLcoIv5NtNQs0-y8bUzxQmMrSBIU8w8yl1UfRMET7672thaPzKOCXNsofg.n9oVtVJYVIC9bTtSkryMFg', // Ajusta según el nombre de tu encabezado
     });
     return this.http.post(this.url + endpoint, datos, {headers});
   }
   busquedaPorHuella(img: any){
-    const endpoint = 'v1/administrativo/paciente/consultaPacientePorHuellaDigital';
+    const endpoint = 'v1/administrativo/paciente/consultaPacientePorHuellaDigitalAdmin';
     let datos = {
-      huellaBase64: img,
-      nombre:"GEO",
-      primerApellido:"GIL"
+      huellaBase64: img
     }
     
 
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
-      'X-Auth-Token': 'eyJhbGciOiJFQ0RILUVTK0ExMjhLVyIsImVuYyI6IkExMjhDQkMtSFMyNTYiLCJraWQiOiJsbGF2ZV9yZWNpYmUiLCJjdHkiOiJKV1QiLCJlcGsiOnsia3R5IjoiRUMiLCJ4IjoiLXhmQkg0OXFrcnJ1Q3lPckNVT3NSanE4WWppSV9jeXpmaWpfVGhWb2tJSSIsInkiOiJwSDNvdXBHakhHQ1VXbFRzVVp5YnYzcjc1TEN4dUhKbHNpNEJpa1JFWDQ0IiwiY3J2IjoiUC0yNTYifX0.CeIMwHSRmcZJxzvoG03-HEFIQ-AZ37ymhaPZNeStldotU7hVNuvSZQ.rGAqe4Pi5219P7yAJWJWBA.Ynv3XdT6F6bY0xEXVqqUxXUawz6iyVZxwYpuQFNcC75fvAa8aUv69Nd7F_8kopiCSxlG_zOoh8A9CmFNbxgVSzez2gC3TKKHB2kniIfWGV6stXbOKsvT3STTxGnxWGRaonr1T87JJXA3f-6phPeD_rK4ZC0ldApdUraNZG_6k_9cWdaCiKkr2wFwEChVLpEPs-6YsIvdd6gjH4hTma7x1kh1P3neYjzI5SzZcKH7HVwk2604OT45Yhpxw-SAzJzwERpFs3UnBg6Ab_If12M9JjpYF-0pYWktwSHOLprBS9ahfsi4o9kxPX4lid_fpZV4kE49Rb8bS5I0zQD_Dsu1vyBNel2vJeis-tFIf07NR2SeaAeWq4BqyBHg9LbiO4gNxbBUWWt9qyK-PpkAu22s3A.S9Vc52-3-6pgUWdAbNQGcA', // Ajusta según el nombre de tu encabezado
+      'X-Auth-Token': 'eyJhbGciOiJFQ0RILUVTK0ExMjhLVyIsImVuYyI6IkExMjhDQkMtSFMyNTYiLCJraWQiOiJsbGF2ZV9yZWNpYmUiLCJjdHkiOiJKV1QiLCJlcGsiOnsia3R5IjoiRUMiLCJ4IjoialU1ZWY4d0c4S3d2MHZqMzFjeUNmUGRmUWlJRFc0aHR4c2pWTVl2UndybyIsInkiOiJLZFJVTHdrQzZFR2l5LUFzS0VHOWNVQklDOTQ4RTRzZDdkTC1EdklIU0cwIiwiY3J2IjoiUC0yNTYifX0.7xn-mjdedzjKsqWbxy4T2Ot84GHVQstLYEhTn4tBQtcDRw36-DyL6Q.PyKa_jxkcWFv0NtoypCqJw.6GCB-Um0B5d4CWMfcOrWy2GPB1__SEsq0LpBb7RwDvbAeXzxmmND3nMTMfuq90tD7O28Y6ntT7E2OO08mEYyIpL8ytbLTIPZKs9ELZlKc-k9qoo4Ew0R_4wHJ3SGp9DxLeiSxADnQ0FF3StCB3WW-f5d2bA2dH9UZFkug8FvptTOmyFeU4XvRO0y0ht84QUpDHqZ-VJMYS1RLo969eXEig8r7oA2GKWARNhhHwX5MWHWRpsW4KHxtK1hM8AL7ZF4ufynv505y3jXfYjIWvUiqCPheB1z4GzZPFjoN6jyQBkRg6ENaHmKh5kTnSlAm5Lp7TTDkZ6vu4AiAN1epq3ZZcJABap3OLcoIv5NtNQs0-y8bUzxQmMrSBIU8w8yl1UfRMET7672thaPzKOCXNsofg.n9oVtVJYVIC9bTtSkryMFg', // Ajusta según el nombre de tu encabezado
     });
     return this.http.post(this.url + endpoint, datos, {headers});
   }

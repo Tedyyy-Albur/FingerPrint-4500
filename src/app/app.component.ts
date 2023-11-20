@@ -1,7 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FingerprintReader, SampleFormat, DeviceConnected,DeviceDisconnected,SamplesAcquired, AcquisitionStarted, AcquisitionStopped } from "@digitalpersona/devices";
+import { FingerprintReader, SampleFormat, DeviceConnected, DeviceDisconnected, SamplesAcquired, AcquisitionStarted, AcquisitionStopped } from "@digitalpersona/devices";
 import './core/modules/WebSdk'
 import { ServicesService } from './services/services.service';
+import { ActivatedRoute, Params } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -10,37 +11,37 @@ import { ServicesService } from './services/services.service';
 })
 export class AppComponent implements OnInit, OnDestroy {
   title = 'huellaYT';
-  listaFinger:any;
-  img:string = "";
-  huellasRegister: any[]=[];
+  listaFinger: any;
+  img: string = "";
+  huellasRegister: any[] = [];
 
   private reader: FingerprintReader;
-  constructor(private services: ServicesService){
+  constructor(private services: ServicesService, private rutaActiva: ActivatedRoute ) {
     this.reader = new FingerprintReader();
+    console.log(rutaActiva.snapshot.paramMap.get('id'));
+    
   }
 
   private onDeviceConnected = (event: DeviceConnected) => { };
   private onDeviceDisconnected = (event: DeviceDisconnected) => { };
   private onAcquisitionStarted = (event: AcquisitionStarted) => {
     console.log("El evento onAcquis");
-    console.log(event);
   }
   private onAcquisitionStopped = (event: AcquisitionStopped) => {
     console.log("El evento onAcquisStoped");
-    console.log(event);
   }
- 
+
   private onSamplesAcquired = (event: SamplesAcquired) => {
     if (this.huellasRegister.length == 4) {
       console.log("completo");
-      
-    } else{
-      this.img="";
+      this.end();
+    } else {
+      this.img = "";
       console.log("El evento Adquisicion de imagen");
-      this.img += event.samples[0];  
+      this.img += event.samples[0];
       this.repairBase64();
     }
-   
+
 
   }
   ngOnInit(): void {
@@ -51,7 +52,8 @@ export class AppComponent implements OnInit, OnDestroy {
     this.reader.on("AcquisitionStopped", this.onAcquisitionStopped);
     this.reader.on("SamplesAcquired", this.onSamplesAcquired);
     this.obtenerDevices();
-      
+   
+
   }
   ngOnDestroy(): void {
     this.reader.off("DeviceConnected", this.onDeviceConnected);
@@ -59,11 +61,11 @@ export class AppComponent implements OnInit, OnDestroy {
     this.reader.off("AcquisitionStarted", this.onAcquisitionStarted);
     this.reader.off("AcquisitionStopped", this.onAcquisitionStopped);
     this.reader.off("SamplesAcquired", this.onSamplesAcquired);
-      
+
   }
 
- 
-  obtenerDevices(){
+
+  obtenerDevices() {
     Promise.all([
       this.reader.enumerateDevices()
     ]).then(result => {
@@ -73,43 +75,49 @@ export class AppComponent implements OnInit, OnDestroy {
       console.log(error);
     })
   }
-  start(){
-    this.img="";
+  start() {
+    this.img = "";
     this.reader.startAcquisition(SampleFormat.PngImage, this.listaFinger[0])
-    .then((resp) => {
-      console.log(resp);
-    })
-    .catch((error) => {
-      console.log(error);
-      
-    })
+      .then((resp) => {
+        console.log(resp);
+      })
+      .catch((error) => {
+        console.log(error);
+
+      })
   }
-  end(){
+  end() {
     this.reader.stopAcquisition(this.listaFinger[0])
-    .then((resp) => {
-      console.log(resp);
-    })
-    .catch((error) => {
-      console.log(error);
-      
-    })
+      .then((resp) => {
+        console.log(resp);
+      })
+      .catch((error) => {
+        console.log(error);
+
+      })
 
   }
-  repairBase64(){
+  repairBase64() {
     var strImage;
     strImage = this.img;
-    strImage = strImage.replace(/_/g,"/");
-    strImage = strImage.replace(/-/g,"+");
+    strImage = strImage.replace(/_/g, "/");
+    strImage = strImage.replace(/-/g, "+");
     this.img = strImage;
     this.huellasRegister.push(this.img)
+  }
+  buscarPaciente() {
     this.services.busquedaPorHuella(this.img).subscribe(resp => {
       console.log(resp);
     })
   }
 
-  guardarHuella(){
+  guardarHuella() {
     console.log(this.huellasRegister);
     this.services.guardar(this.huellasRegister).subscribe(resp => {
     })
+  }
+  reiniciarHuellas(){
+    this.huellasRegister = [];
+    this.start();
   }
 }
