@@ -5,7 +5,7 @@ import { AppComponent } from './app.component';
 import { HuellaComponent } from './huella/huella.component';
 
 const routes: Routes = [
-  { path: 'idPaciente/:id', component: HuellaComponent },
+  { path: ':id', component: AppComponent },
   { path: '**', component: AppComponent }
 ];
 

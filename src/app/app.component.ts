@@ -14,6 +14,7 @@ export class AppComponent implements OnInit, OnDestroy {
   listaFinger: any;
   img: string = "";
   huellasRegister: any[] = [];
+  token: any;
 
   private reader: FingerprintReader;
   constructor(private services: ServicesService, private rutaActiva: ActivatedRoute ) {
@@ -52,7 +53,10 @@ export class AppComponent implements OnInit, OnDestroy {
     this.reader.on("AcquisitionStopped", this.onAcquisitionStopped);
     this.reader.on("SamplesAcquired", this.onSamplesAcquired);
     this.obtenerDevices();
-   
+    this.token = window.location.pathname;
+    this.token = this.token.replace(/^\//g, '');
+    console.log(this.token);
+    
 
   }
   ngOnDestroy(): void {
@@ -106,14 +110,14 @@ export class AppComponent implements OnInit, OnDestroy {
     this.huellasRegister.push(this.img)
   }
   buscarPaciente() {
-    this.services.busquedaPorHuella(this.img).subscribe(resp => {
+    this.services.busquedaPorHuella(this.img,this.token).subscribe(resp => {
       console.log(resp);
     })
   }
 
   guardarHuella() {
     console.log(this.huellasRegister);
-    this.services.guardar(this.huellasRegister).subscribe(resp => {
+    this.services.guardarHuellaAdmin(this.huellasRegister, this.token).subscribe(resp => {
     })
   }
   reiniciarHuellas(){
