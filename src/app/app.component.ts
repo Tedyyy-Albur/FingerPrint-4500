@@ -3,6 +3,7 @@ import { FingerprintReader, SampleFormat, DeviceConnected, DeviceDisconnected, S
 import './core/modules/WebSdk'
 import { ServicesService } from './services/services.service';
 import { ActivatedRoute, Params } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-root',
@@ -17,7 +18,7 @@ export class AppComponent implements OnInit, OnDestroy {
   token: any;
 
   private reader: FingerprintReader;
-  constructor(private services: ServicesService, private rutaActiva: ActivatedRoute ) {
+  constructor(private services: ServicesService, private rutaActiva: ActivatedRoute, private cookieService: CookieService ) {
     this.reader = new FingerprintReader();
     console.log(rutaActiva.snapshot.paramMap.get('id'));
     
@@ -56,7 +57,10 @@ export class AppComponent implements OnInit, OnDestroy {
     this.token = window.location.pathname;
     this.token = this.token.replace(/^\//g, '');
     console.log(this.token);
-    
+    //Cookies en codigo para ver si funciona
+    this.cookieService.set('nombre', 'GEO');
+    this.cookieService.set('pApellido', 'GIL');
+    this.cookieService.set('mApellido', 'GIL');
 
   }
   ngOnDestroy(): void {
