@@ -8,8 +8,9 @@ import { Observable } from 'rxjs';
 export class ServicesService {
 
   constructor(private http: HttpClient) { }
+  private url = 'https://ec2-54-146-2-42.compute-1.amazonaws.com:8443/api/';
   //private url = 'http://ec2-54-146-2-42.compute-1.amazonaws.com:8080/api/';
-  private url = 'http://localhost:8080/api/';
+  //private url = 'http://localhost:8080/api/';
 
   guardarHuellaAdmin(img: any[], token: any, idPaciente:any){
     const endpoint = 'v1/administrativo/paciente/registrar-huella-paciente-admin';

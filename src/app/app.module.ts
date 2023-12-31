@@ -4,12 +4,12 @@ import { HttpClientModule } from'@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { HuellaComponent } from './huella/huella.component';
+import { LoadingComponent } from './components/loading/loading.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HuellaComponent
+    LoadingComponent,
   ],
   imports: [
     BrowserModule,

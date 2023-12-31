@@ -13,10 +13,11 @@ import Swal from 'sweetalert2'
 export class AppComponent implements OnInit, OnDestroy {
   title = 'huellaYT';
   listaFinger: any;
-  img: string = "";
+  img: string = '';
   huellasRegister: any[] = [];
   token: any;
   idPaciente: any;
+  loading: boolean = false;
 
   private reader: FingerprintReader;
   constructor(private services: ServicesService, private rutaActiva: ActivatedRoute, private cookieService: CookieService ) {
@@ -54,18 +55,18 @@ export class AppComponent implements OnInit, OnDestroy {
     this.reader.on("AcquisitionStopped", this.onAcquisitionStopped);
     this.reader.on("SamplesAcquired", this.onSamplesAcquired);
     this.obtenerDevices();
-    this.token = window.location.pathname;
-    this.token = this.token.replace(/^\//g, '');
 
-    this.token = this.token.split('id')[0];
-    this.token = this.token.slice(0, -1);
+    //OBTENER EL TOKEN 
+    const toke = window.location.pathname.substring(0);
+    const valorToken = toke.split('/')[1];
+    this.token = valorToken;
     
-    
+    //OBTENER EL IDPACIENTE
     const url = window.location.pathname.substring(1);
     const valor = url.split('id')[1];
     this.idPaciente = valor.split('/')[1];
 
-    console.log(this.idPaciente+' V3');
+    console.log(this.idPaciente+' V6');
   }
   ngOnDestroy(): void {
     this.reader.off("DeviceConnected", this.onDeviceConnected);
@@ -82,7 +83,7 @@ export class AppComponent implements OnInit, OnDestroy {
       this.reader.enumerateDevices()
     ]).then(result => {
       this.listaFinger = result[0];
-      console.log(this.listaFinger[0]);
+      console.log('Obtener devices: '+result);
     }).catch((error) => {
       console.log(error);
     })
@@ -114,12 +115,16 @@ export class AppComponent implements OnInit, OnDestroy {
     this.img = strImage;
     this.huellasRegister.push(this.img)
   }
-  buscarPaciente() {
-    this.services.busquedaPorHuella(this.img,this.token).subscribe(resp => {
+  buscarPaciente() {  
+    this.loading = true;
+    this.services.busquedaPorHuella(this.img, this.token).subscribe(resp => {
       if(resp.estatus == 1){
+        this.loading = false;
         this.alertaExito();
         window.open('http://ec2-54-146-2-42.compute-1.amazonaws.com/?nombre='+resp.informacion.paciente.nombre+'&?pApellido='+resp.informacion.paciente.primerApellido);
+        window.close();
       }else{
+        this.loading = false;
         this.alertaError();
       }
     })
@@ -131,11 +136,13 @@ export class AppComponent implements OnInit, OnDestroy {
     if (this.huellasRegister.length != 0) {
       this.services.guardarHuellaAdmin(this.huellasRegister, this.token, this.idPaciente).subscribe(resp => {
         window.open('http://ec2-54-146-2-42.compute-1.amazonaws.com/pacientes/'+this.idPaciente);
+        this.cookieService.delete('token');
       })
     }else{
       this.errorGuardado();
     }
   }
+
   reiniciarHuellas(){
     this.huellasRegister = [];
     this.start();
@@ -152,6 +159,7 @@ export class AppComponent implements OnInit, OnDestroy {
       confirmButtonText: "Intentar de nuevo"
     }).then((result) => {
       if (result.isConfirmed) {
+        this.img = "";
         this.huellasRegister = [];
       }
     });
