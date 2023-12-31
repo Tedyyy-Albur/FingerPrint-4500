@@ -18,11 +18,12 @@ export class AppComponent implements OnInit, OnDestroy {
   token: any;
   idPaciente: any;
   loading: boolean = false;
+  mensajeEnviar: string = "";
 
   private reader: FingerprintReader;
-  constructor(private services: ServicesService, private rutaActiva: ActivatedRoute, private cookieService: CookieService ) {
-    this.reader = new FingerprintReader(); 
-    
+  constructor(private services: ServicesService, private rutaActiva: ActivatedRoute, private cookieService: CookieService) {
+    this.reader = new FingerprintReader();
+
   }
 
   private onDeviceConnected = (event: DeviceConnected) => { };
@@ -60,13 +61,13 @@ export class AppComponent implements OnInit, OnDestroy {
     const toke = window.location.pathname.substring(0);
     const valorToken = toke.split('/')[1];
     this.token = valorToken;
-    
+
     //OBTENER EL IDPACIENTE
     const url = window.location.pathname.substring(1);
     const valor = url.split('id')[1];
     this.idPaciente = valor.split('/')[1];
 
-    console.log(this.idPaciente+' V6');
+    console.log(this.idPaciente + ' V6');
   }
   ngOnDestroy(): void {
     this.reader.off("DeviceConnected", this.onDeviceConnected);
@@ -83,7 +84,7 @@ export class AppComponent implements OnInit, OnDestroy {
       this.reader.enumerateDevices()
     ]).then(result => {
       this.listaFinger = result[0];
-      console.log('Obtener devices: '+result);
+      console.log('Obtener devices: ' + result);
     }).catch((error) => {
       console.log(error);
     })
@@ -115,40 +116,59 @@ export class AppComponent implements OnInit, OnDestroy {
     this.img = strImage;
     this.huellasRegister.push(this.img)
   }
-  buscarPaciente() {  
+
+  buscarPaciente() {
+    this.mensajeEnviar = "Buscando"
     this.loading = true;
     this.services.busquedaPorHuella(this.img, this.token).subscribe(resp => {
-      if(resp.estatus == 1){
+      if (resp.estatus == 1) {
         this.loading = false;
         this.alertaExito();
-        window.open('http://ec2-54-146-2-42.compute-1.amazonaws.com/?nombre='+resp.informacion.paciente.nombre+'&?pApellido='+resp.informacion.paciente.primerApellido);
-        window.close();
-      }else{
+        window.open('http://ec2-54-146-2-42.compute-1.amazonaws.com/?nombre=' + resp.informacion.paciente.nombre + '&?pApellido=' + resp.informacion.paciente.primerApellido);
+      } else if (resp.valorError == 0) {
+        this.loading = false;
+        this.error(resp.error);
+      } else {
         this.loading = false;
         this.alertaError();
       }
-    })
-    
+    });
+
   }
 
   guardarHuella() {
     console.log(this.huellasRegister);
+    this.mensajeEnviar = "Guardando"
     if (this.huellasRegister.length != 0) {
+
+      this.loading = true;
       this.services.guardarHuellaAdmin(this.huellasRegister, this.token, this.idPaciente).subscribe(resp => {
-        window.open('http://ec2-54-146-2-42.compute-1.amazonaws.com/pacientes/'+this.idPaciente);
-        this.cookieService.delete('token');
-      })
-    }else{
+        if (resp.estatus == 1) {
+          window.open('http://ec2-54-146-2-42.compute-1.amazonaws.com/pacientes/' + this.idPaciente);
+          this.cookieService.delete('token');
+          this.loading = false;
+        } else if (resp.valorError == 0) {
+          this.loading = false;
+          this.error(resp.error);
+        } else {
+
+          this.loading = false;
+          this.errorGuardado();
+        }
+      });
+
+    } else {
+      this.loading = false;
       this.errorGuardado();
     }
   }
 
-  reiniciarHuellas(){
+  reiniciarHuellas() {
     this.huellasRegister = [];
     this.start();
   }
 
-  alertaError(){
+  alertaError() {
     Swal.fire({
       title: "Paciente no encontrado",
       text: "Vuelva a intentarlo con otra huella!",
@@ -164,7 +184,7 @@ export class AppComponent implements OnInit, OnDestroy {
       }
     });
   }
-  alertaExito(){
+  alertaExito() {
     Swal.fire({
       icon: "success",
       title: "Encontrado Correctamente",
@@ -172,11 +192,18 @@ export class AppComponent implements OnInit, OnDestroy {
       timer: 3500
     });
   }
-  errorGuardado(){
+  errorGuardado() {
     Swal.fire({
       title: "Huellas no registradas",
       text: "Agrega al menos una huella!",
       icon: "question"
+    });
+  }
+  error(error: any) {
+    Swal.fire({
+      title: error.name,
+      text: error.message,
+      icon: "error"
     });
   }
 }

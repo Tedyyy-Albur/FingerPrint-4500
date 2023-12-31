@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders  } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, catchError, map, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +12,7 @@ export class ServicesService {
   //private url = 'http://ec2-54-146-2-42.compute-1.amazonaws.com:8080/api/';
   //private url = 'http://localhost:8080/api/';
 
-  guardarHuellaAdmin(img: any[], token: any, idPaciente:any){
+  guardarHuellaAdmin(img: any[], token: any, idPaciente:any): Observable<any>{
     const endpoint = 'v1/administrativo/paciente/registrar-huella-paciente-admin';
     let datos = {
       idPaciente: idPaciente,
@@ -25,7 +25,14 @@ export class ServicesService {
       'Content-Type': 'application/json',
       'X-Auth-Token': token, 
     });
-    return this.http.post(this.url + endpoint, datos, {headers});
+    return this.http.post(this.url + endpoint, datos, {headers}).pipe(
+      catchError((error) => {
+        return of({valorError: 0, error: error});
+      }),
+      map((response) => {
+        return response;
+      })
+    );
   }
   busquedaPorHuella(img: any, token: any): Observable<any>{
     const endpoint = 'v1/administrativo/paciente/consultaPacientePorHuellaDigitalAdmin';
@@ -38,7 +45,14 @@ export class ServicesService {
       'Content-Type': 'application/json',
       'X-Auth-Token': token, 
     });
-    return this.http.post(this.url + endpoint, datos, {headers});
+    return this.http.post(this.url + endpoint, datos, {headers}).pipe(
+      catchError((error) => {
+        return of({valorError: 0, error: error});
+      }),
+      map((response) => {
+        return response;
+      })
+    );
   }
 
 }
