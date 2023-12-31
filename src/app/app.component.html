@@ -1,7 +1,7 @@
 <app-loading class="color-main" *ngIf="loading" [mensajeCarga]="mensajeEnviar"></app-loading>
 
 
-<div class="d-flex justify-content-center">
+<div class="d-flex justify-content-center mt-5">
     <h1>Huella Digital</h1>
 </div>
 <div class="d-flex justify-content-center gap-5 mt-5">
@@ -12,7 +12,11 @@
         uppercase}}</button>
 </div>
 <div class="d-flex justify-content-center mt-5 ">
-    <img src='data:image/png;base64,{{ img }}' alt="Huella digital Imagen" width="300px" height="300px">
+    <img *ngIf="img !== ''" src='data:image/png;base64,{{ img }}' alt="Huella digital Imagen" width="300px" height="300px">
+    <div *ngIf="img == ''" class="d-flex flex-column justify-content-center align-items-center text-xl">
+        <span>Sin huellas detectadas</span>
+        <span class="material-symbols-outlined" style="font-size: 5vw;">fingerprint</span> 
+    </div>
 </div>
 <div class="d-flex justify-content-center mt-5">
     <img *ngFor="let item of huellasRegister" src='data:image/png;base64,{{ item }}' alt="Huella digital Imagen"
