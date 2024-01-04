@@ -57,17 +57,18 @@ export class AppComponent implements OnInit, OnDestroy {
     this.reader.on("SamplesAcquired", this.onSamplesAcquired);
     this.obtenerDevices();
 
-    //OBTENER EL TOKEN 
-    const toke = window.location.pathname.substring(0);
-    const valorToken = toke.split('/')[1];
-    this.token = valorToken;
-
     //OBTENER EL IDPACIENTE
     const url = window.location.pathname.substring(1);
     const valor = url.split('id')[1];
     this.idPaciente = valor.split('/')[1];
 
-    console.log(this.idPaciente + ' V6');
+    console.log(this.idPaciente + ' V9');
+
+    //OBTENER EL TOKEN 
+    const toke = window.location.pathname.substring(0);
+    const valorToken = toke.split('/')[1];
+    this.token = valorToken;
+
   }
   ngOnDestroy(): void {
     this.reader.off("DeviceConnected", this.onDeviceConnected);
@@ -84,6 +85,7 @@ export class AppComponent implements OnInit, OnDestroy {
       this.reader.enumerateDevices()
     ]).then(result => {
       this.listaFinger = result[0];
+      this.start();
       console.log('Obtener devices: ' + result);
     }).catch((error) => {
       console.log(error);
@@ -125,6 +127,7 @@ export class AppComponent implements OnInit, OnDestroy {
         this.loading = false;
         this.alertaExito();
         window.open('http://ec2-54-146-2-42.compute-1.amazonaws.com/?nombre=' + resp.informacion.paciente.nombre + '&?pApellido=' + resp.informacion.paciente.primerApellido);
+        window.close();
       } else if (resp.valorError == 0) {
         this.loading = false;
         this.error(resp.error);
@@ -145,7 +148,7 @@ export class AppComponent implements OnInit, OnDestroy {
       this.services.guardarHuellaAdmin(this.huellasRegister, this.token, this.idPaciente).subscribe(resp => {
         if (resp.estatus == 1) {
           window.open('http://ec2-54-146-2-42.compute-1.amazonaws.com/pacientes/' + this.idPaciente);
-          this.cookieService.delete('token');
+          window.close();
           this.loading = false;
         } else if (resp.valorError == 0) {
           this.loading = false;

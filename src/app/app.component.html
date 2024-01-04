@@ -5,7 +5,6 @@
     <h1>Huella Digital</h1>
 </div>
 <div class="d-flex justify-content-center gap-5 mt-5">
-    <button (click)="start()" type="button" class="btn btn-primary">{{ 'Capturar' | uppercase }}</button>
     <button *ngIf="idPaciente != 0" (click)="guardarHuella()" type="button" class="btn btn-success">{{ 'guardar' |
         uppercase}}</button>
     <button *ngIf="idPaciente == 0" (click)="buscarPaciente()" type="button" class="btn btn-warning">{{ 'Buscar' |
